@@ -10,3 +10,16 @@ This Peptide toxicity prediction tool developed by teams from the University of 
 We provided our dataset and you can find them [Dataset](https://github.com/GGCL7/ToxiPep/tree/main/Dataset)
 # Source code
 We provide the source code and you can find them [Code](https://github.com/GGCL7/ToxiPep/tree/main/Code)
+
+
+
+# Predicting peptide toxicity
+
+Predicting whether peptide sequences are toxic
+
+To predict whether some given peptide sequences are toxic, use the following command:
+
+```bash
+python predict.py -i test.fasta -o prediction results.txt
+```
+
