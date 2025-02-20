@@ -1,5 +1,5 @@
 
-Sequence,predicted Label
+Sequence, predicted Label, probability
 CIAESEPCNIITQNCCDGKCLFFCIQIPE, 1, 0.921371
 KCCMRPICTCPCCIGP, 1, 0.972409
 FLPKLFAKITKKNMAHIR, 1, 0.692792
