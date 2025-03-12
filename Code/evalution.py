@@ -46,11 +46,11 @@ def calculate_metrics(all_labels, all_preds):
     auc = roc_auc_score(all_labels, all_preds)
     return acc, sen, spe, mcc, auc
 
-# 保存评估结果到 CSV 文件
+
 def save_metrics_to_csv(metrics, filename="metrics.csv"):
     df = pd.DataFrame([metrics], columns=["ACC", "Sensitivity", "Specificity", "MCC", "AUC"])
     df.to_csv(filename, index=False)
-    print(f"评估结果已保存到 {filename}")
+    print(f"The results of the evaluation have been saved to {filename}")
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
