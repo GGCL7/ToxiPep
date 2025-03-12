@@ -56,22 +56,22 @@ def pad_sequence(token_list, max_len=51):
     return data
 
 
-# 从CSV文件中读取数据
+
 def load_data_from_csv(file_path):
     df = pd.read_csv(file_path)
     sequences = df['Seq'].tolist()
     labels = df['Label'].tolist()
 
-    # 转换序列并进行填充
+    
     indexed_sequences = transform_Pep_to_index(sequences, Pep_residue2idx)
     padded_sequences = pad_sequence(indexed_sequences)
 
-    # 提取特征矩阵
+    
     graph_features = [convert_to_graph_channel(seq) for seq in sequences]
 
     return padded_sequences, graph_features, labels
 
-# 构建PyTorch数据集
+
 class MyDataSet(Data.Dataset):
     def __init__(self, input_ids, graph_features, labels):
         self.input_ids = input_ids
