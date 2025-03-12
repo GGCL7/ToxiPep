@@ -103,7 +103,7 @@ def get_ring_info(atom):
         ring_info_feature.append(1 if atom.IsInRingSize(i) else 0)
     return ring_info_feature
 
-# 获取原子特征的函数
+
 def atom_feature(atom) -> np.ndarray:
 
     return np.array(one_of_k_encoding_unk(atom.GetSymbol(), ['C', 'N', 'O', 'S']) +
@@ -124,7 +124,7 @@ def norm_Adj(adjacency):
 
 
 def norm_fea(features):
-    norm_fea_ = features / features.sum(1).reshape(-1, 1)  # 归一化节点特征矩阵
+    norm_fea_ = features / features.sum(1).reshape(-1, 1)  
     return norm_fea_
 
 
