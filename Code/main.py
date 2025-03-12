@@ -55,7 +55,7 @@ def evaluate_model(model, test_loader, criterion, device):
 
 
 
-vocab_size = len(dna_residue2idx)
+vocab_size = len(Pep_residue2idx)
 d_model = 256
 d_ff = 512
 n_layers = 2
@@ -106,8 +106,8 @@ for epoch in range(n_epochs):
     if test_accuracy > best_accuracy:
         best_accuracy = test_accuracy
         torch.save(model.state_dict(), best_model_path)
-        print(f'新最佳模型保存于 Epoch {epoch + 1}，准确度: {best_accuracy:.4f}')
+        print(f'New best model saved at Epoch {epoch + 1}，accuracy: {best_accuracy:.4f}')
 
-print(f'训练完成。最高准确度: {best_accuracy:.4f}，模型已保存到 {best_model_path}')
+print(f'Training complete. Highest accuracy: {best_accuracy:.4f}，model saved to {best_model_path}')
 
 
