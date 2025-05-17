@@ -1,7 +1,4 @@
-from sklearn.metrics import confusion_matrix, matthews_corrcoef, roc_auc_score, classification_report
-import pandas as pd
-from model import *
-from dataset import *
+
 
 
 from model import *
@@ -50,12 +47,12 @@ def calculate_metrics(all_labels, all_preds):
 def save_metrics_to_csv(metrics, filename="metrics.csv"):
     df = pd.DataFrame([metrics], columns=["ACC", "Sensitivity", "Specificity", "MCC", "AUC"])
     df.to_csv(filename, index=False)
-    print(f"The results of the evaluation have been saved to {filename}")
 
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-vocab_size = len(dna_residue2idx)
+
+device = torch.device("mps" if torch.cuda.is_available() else "cpu")
+vocab_size = len(Pep_residue2idx)
 d_model, d_ff, n_layers, n_heads, max_len = 256, 512, 2, 4, 50
 structural_config = {
     "embedding_dim": 21,
@@ -65,8 +62,8 @@ structural_config = {
 }
 
 
-test_sequences, test_graph_features, test_labels = load_data_from_csv(
-    'test.csv')
+test_sequences, test_graph_features, test_labels = load_data_from_fasta(
+    'test.txt')
 
 test_dataset = MyDataSet(test_sequences, test_graph_features, test_labels)
 test_loader = Data.DataLoader(test_dataset, batch_size=64, shuffle=False)
@@ -75,7 +72,7 @@ test_loader = Data.DataLoader(test_dataset, batch_size=64, shuffle=False)
 model = ToxiPep_Model(vocab_size, d_model, d_ff, n_layers, n_heads, max_len,
                            structural_config=structural_config).to(device)
 
-model.load_state_dict(torch.load("best_model.pth"))
+model.load_state_dict(torch.load("best_model_0.9.pth"))
 criterion = nn.CrossEntropyLoss()
 
 
@@ -86,7 +83,3 @@ acc, sen, spe, mcc, auc = calculate_metrics(all_labels, all_preds)
 metrics = {"ACC": acc, "Sensitivity": sen, "Specificity": spe, "MCC": mcc, "AUC": auc}
 
 print(f"ACC: {acc:.4f}, Sensitivity: {sen:.4f}, Specificity: {spe:.4f}, MCC: {mcc:.4f}, AUC: {auc:.4f}")
-save_metrics_to_csv(metrics)
-
-
-

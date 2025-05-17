@@ -1,20 +1,7 @@
-import pandas as pd
-import torch
-import torch.utils.data as Data
-import torch.nn as nn
-import torch.optim as optim
-import numpy as np
-import math
-from model import *
-from dataset import *
 
-import torch.nn.functional as F
 
 from model import *
 from dataset import *
-
-import torch.nn.functional as F
-
 
 def train_model(model, train_loader, criterion, optimizer, device):
     model.train()
@@ -70,18 +57,19 @@ structural_config = {
     "filter_sizes": [(3, 3), (5, 5), (7, 7), (9, 9)]
 }
 
-train_sequences, train_graph_features, train_labels = load_data_from_csv(
-    'train.csv')
-test_sequences, test_graph_features, test_labels = load_data_from_csv(
-    'test.csv')
+train_sequences, train_graph_features, train_labels = load_data_from_fasta(
+    'train.txt')
+test_sequences, test_graph_features, test_labels = load_data_from_fasta(
+    'test.txt')
 
 
 train_dataset = MyDataSet(train_sequences, train_graph_features, train_labels)
 test_dataset = MyDataSet(test_sequences, test_graph_features, test_labels)
 
 
-train_loader = Data.DataLoader(train_dataset, batch_size=64, shuffle=True)
-test_loader = Data.DataLoader(test_dataset, batch_size=64, shuffle=False)
+train_loader = Data.DataLoader(train_dataset, batch_size=32, shuffle=True)
+test_loader = Data.DataLoader(test_dataset, batch_size=32, shuffle=False)
+
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -94,7 +82,7 @@ optimizer = optim.AdamW(model.parameters(), lr=0.001)
 
 n_epochs = 100
 best_accuracy = 0.0
-best_model_path = "best_model.pth"
+best_model_path = "best_model_0.9.pth"
 
 for epoch in range(n_epochs):
     train_loss = train_model(model, train_loader, criterion, optimizer, device)
@@ -106,8 +94,8 @@ for epoch in range(n_epochs):
     if test_accuracy > best_accuracy:
         best_accuracy = test_accuracy
         torch.save(model.state_dict(), best_model_path)
-        print(f'New best model saved at Epoch {epoch + 1}，accuracy: {best_accuracy:.4f}')
+        print(f'新最佳模型保存于 Epoch {epoch + 1}，准确度: {best_accuracy:.4f}')
 
-print(f'Training complete. Highest accuracy: {best_accuracy:.4f}，model saved to {best_model_path}')
+
 
 

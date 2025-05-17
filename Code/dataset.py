@@ -1,3 +1,5 @@
+
+
 import pandas as pd
 import torch
 import torch.utils.data as Data
@@ -7,6 +9,7 @@ import numpy as np
 import math
 from atom_feature import convert_to_graph_channel
 
+# 残基到索引的映射
 Pep_residue2idx = {
     '[PAD]': 0,
     '[CLS]': 1,
@@ -33,10 +36,6 @@ Pep_residue2idx = {
     'Y': 22,  # Tyrosine
 }
 
-
-
-
-
 def transform_Pep_to_index(sequences, residue2idx):
     token_index = []
     for seq in sequences:
@@ -44,29 +43,42 @@ def transform_Pep_to_index(sequences, residue2idx):
         token_index.append(seq_id)
     return token_index
 
-
-
 def pad_sequence(token_list, max_len=51):
     data = []
-    for i in range(len(token_list)):
-        token_list[i] = [Pep_residue2idx['[CLS]']] + token_list[i]
-        n_pad = max_len - len(token_list[i])
-        token_list[i].extend([Pep_residue2idx['[PAD]']] * n_pad)
-        data.append(token_list[i])
+    for tokens in token_list:
+        seq = [Pep_residue2idx['[CLS]']] + tokens
+        n_pad = max_len - len(seq)
+        seq.extend([Pep_residue2idx['[PAD]']] * max(n_pad, 0))
+        data.append(seq[:max_len])
     return data
 
+def load_data_from_fasta(file_path, max_len=51):
+
+    sequences = []
+    labels = []
+    with open(file_path, 'r') as f:
+        current_seq = None
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            if line.startswith('>'):
+
+                header = line[1:]
+
+                label = 1 if header.lower().startswith('pos') else 0
+                labels.append(label)
+                current_seq = ''
+                sequences.append(current_seq)
+            else:
+
+                sequences[-1] += line
 
 
-def load_data_from_csv(file_path):
-    df = pd.read_csv(file_path)
-    sequences = df['Seq'].tolist()
-    labels = df['Label'].tolist()
-
-    
     indexed_sequences = transform_Pep_to_index(sequences, Pep_residue2idx)
-    padded_sequences = pad_sequence(indexed_sequences)
+    padded_sequences = pad_sequence(indexed_sequences, max_len=max_len)
 
-    
+
     graph_features = [convert_to_graph_channel(seq) for seq in sequences]
 
     return padded_sequences, graph_features, labels
@@ -82,4 +94,8 @@ class MyDataSet(Data.Dataset):
         return len(self.input_ids)
 
     def __getitem__(self, idx):
-        return torch.tensor(self.input_ids[idx]), torch.tensor(self.graph_features[idx]), torch.tensor(self.labels[idx])
+        return (
+            torch.tensor(self.input_ids[idx], dtype=torch.long),
+            torch.tensor(self.graph_features[idx], dtype=torch.float),
+            torch.tensor(self.labels[idx], dtype=torch.long),
+        )
