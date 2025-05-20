@@ -103,7 +103,7 @@ structural_config = {
 }
 
 model = ToxiPep_Model(vocab_size, d_model, d_ff, n_layers, n_heads, max_len, structural_config=structural_config).to(device)
-model.load_state_dict(torch.load("best_model.pth"))
+model.load_state_dict(torch.load("best_model_0.9.pth"))
 
 
 test_dataset = PeptideDataset(padded_sequences, graph_features)
