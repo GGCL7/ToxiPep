@@ -22,4 +22,9 @@ To predict whether some given peptide sequences are toxic, use the following com
 ```bash
 python predict.py -i test.fasta -o prediction results.txt
 ```
+## Contact
 
+If you have any questions or need further assistance, please contact:
+
+Jiahui Guan  
+📧 jhguan@connect.hku.hk
