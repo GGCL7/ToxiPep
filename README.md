@@ -11,7 +11,19 @@ We provided our dataset and you can find them [Dataset](https://github.com/GGCL7
 # Source code
 We provide the source code and you can find them [Code](https://github.com/GGCL7/ToxiPep/tree/main/Code)
 
+## 🔧 Installation instructions
 
+1. **Clone the repository**
+```bash
+git clone https://github.com/GGCL7/ToxiPep.git
+cd ToxiPep
+```
+2. **Set up the Python environment**
+```bash
+conda create -n toxipep python=3.10
+conda activate toxipep
+pip install -r requirements.txt
+```
 
 # Predicting peptide toxicity
 
